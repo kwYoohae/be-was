@@ -28,8 +28,15 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            final HttpWasRequest httpWasRequest = new HttpWasRequest(in);
-            logger.info("Resource Path is : {}",httpWasRequest.getResourcePath());
+            final InputStreamReader inputStreamReader = new InputStreamReader(in);
+            final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            String input = bufferedReader.readLine();
+            while (input != null && !input.isBlank()) {
+                logger.debug("request = {}", input);
+                input = bufferedReader.readLine();
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
